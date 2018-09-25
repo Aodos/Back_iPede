@@ -1,0 +1,16 @@
+package com.arthur.ipede;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class IPedeBackApplicationTests {
+
+	@Test
+	public void contextLoads() {
+	}
+
+}
