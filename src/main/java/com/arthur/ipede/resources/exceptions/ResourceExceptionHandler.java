@@ -14,6 +14,7 @@ public class ResourceExceptionHandler {
 	
 	@ExceptionHandler(QueryVaziaException.class)
 	public ResponseEntity<StandartError> queryVazia(QueryVaziaException e, HttpServletRequest request){
+		System.out.println("Entro aqui");
 		StandartError err = new StandartError(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 	}

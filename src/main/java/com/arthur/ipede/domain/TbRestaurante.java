@@ -30,7 +30,6 @@ public class TbRestaurante implements Serializable {
 	private String nomeRestaurante;
 
 	private String senhaRestaurante;
-	
 
 	public TbRestaurante() {
 	}
@@ -120,7 +119,5 @@ public class TbRestaurante implements Serializable {
 		this.nomeRestaurante = nomeRestaurante;
 		this.senhaRestaurante = senhaRestaurante;
 	}
-
-
 
 }
