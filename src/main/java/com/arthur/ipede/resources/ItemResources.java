@@ -12,50 +12,46 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.arthur.ipede.domain.TbRestaurante;
-import com.arthur.ipede.services.RestauranteService;
+import com.arthur.ipede.domain.TbItem;
+import com.arthur.ipede.services.ItemService;
 
 @RestController
-@RequestMapping(value = "/restaurantes")
-public class RestauranteResource {
+@RequestMapping(value = "/itens-restaurante")
+public class ItemResources {
 
 	@Autowired
-	private RestauranteService service;
+	private ItemService service;
 	
 	@SuppressWarnings("rawtypes")
-	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List> retornaTodosRestaurantes() {
-		return ResponseEntity.ok().body(service.todosOsRestaurantes());
-	}
-
-	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<List> buscaPorId(@PathVariable Integer id) {
-		return ResponseEntity.ok().body(service.buscaPorId(id));
+	public ResponseEntity<List> buscaPorIdRestaurante(@PathVariable Integer id) {
+		return ResponseEntity.ok().body(service.buscaPorIdRestaurante(id));
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "/item/{id}", method = RequestMethod.GET)
+	public ResponseEntity<List> buscaPorIdItem(@PathVariable Integer id) {
+		return ResponseEntity.ok().body(service.buscaPorIdItem(id));
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> teste(@RequestBody TbRestaurante obj) {
+	public ResponseEntity<Void> teste(@RequestBody TbItem obj) {
 		obj = service.inserir(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(obj.getIdRestaurante()).toUri();
+				.path("/{id}").buildAndExpand(obj.getIdt_id_item()).toUri();
 		return ResponseEntity.created(uri).build();
-		
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Void> update(@RequestBody TbRestaurante obj,@PathVariable Integer id){
-		obj.setIdRestaurante(id);
+	public ResponseEntity<Void> update(@RequestBody TbItem obj,@PathVariable Integer id){
+		obj.setIdt_id_item(id);
 		obj = service.atualiza(obj);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/item/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.deleta(id);
 		return ResponseEntity.noContent().build();
 	}
-	
-	
-	
 }

@@ -12,22 +12,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.arthur.ipede.domain.TbRestaurante;
-import com.arthur.ipede.services.RestauranteService;
+import com.arthur.ipede.domain.TbCliente;
+import com.arthur.ipede.services.ClienteService;
 
 @RestController
-@RequestMapping(value = "/restaurantes")
-public class RestauranteResource {
+@RequestMapping(value = "/clientes")
+public class ClienteResources {
 
 	@Autowired
-	private RestauranteService service;
+	private ClienteService service;
 	
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<List> retornaTodosRestaurantes() {
-		return ResponseEntity.ok().body(service.todosOsRestaurantes());
+		return ResponseEntity.ok().body(service.todosOsClientes());
 	}
-
+	
 	@SuppressWarnings("rawtypes")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<List> buscaPorId(@PathVariable Integer id) {
@@ -35,17 +35,16 @@ public class RestauranteResource {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> teste(@RequestBody TbRestaurante obj) {
+	public ResponseEntity<Void> teste(@RequestBody TbCliente obj) {
 		obj = service.inserir(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(obj.getIdRestaurante()).toUri();
+				.path("/{id}").buildAndExpand(obj.getIdt_id_cliente()).toUri();
 		return ResponseEntity.created(uri).build();
-		
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Void> update(@RequestBody TbRestaurante obj,@PathVariable Integer id){
-		obj.setIdRestaurante(id);
+	public ResponseEntity<Void> update(@RequestBody TbCliente obj,@PathVariable Integer id){
+		obj.setIdt_id_cliente(id);
 		obj = service.atualiza(obj);
 		return ResponseEntity.noContent().build();
 	}
@@ -55,7 +54,4 @@ public class RestauranteResource {
 		service.deleta(id);
 		return ResponseEntity.noContent().build();
 	}
-	
-	
-	
 }

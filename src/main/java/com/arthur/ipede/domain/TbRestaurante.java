@@ -30,6 +30,8 @@ public class TbRestaurante implements Serializable {
 	private String nomeRestaurante;
 
 	private String senhaRestaurante;
+	
+	private String url_foto_restaurante;
 
 	public TbRestaurante() {
 	}
@@ -118,6 +120,29 @@ public class TbRestaurante implements Serializable {
 		this.longitude = longitude;
 		this.nomeRestaurante = nomeRestaurante;
 		this.senhaRestaurante = senhaRestaurante;
+	}
+	
+	public TbRestaurante(int idRestaurante, String cep, String cidade, String cnpjRestaurante, String endereco,
+			float latitude, float longitude, String nomeRestaurante, String senhaRestaurante, String url_foto_restaurante) {
+		super();
+		this.idRestaurante = idRestaurante;
+		this.cep = cep;
+		this.cidade = cidade;
+		this.cnpjRestaurante = cnpjRestaurante;
+		this.endereco = endereco;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.nomeRestaurante = nomeRestaurante;
+		this.senhaRestaurante = senhaRestaurante;
+		this.setUrl_foto_restaurante(url_foto_restaurante);
+	}
+
+	public String getUrl_foto_restaurante() {
+		return url_foto_restaurante;
+	}
+
+	public void setUrl_foto_restaurante(String url_foto_restaurante) {
+		this.url_foto_restaurante = url_foto_restaurante;
 	}
 
 }
