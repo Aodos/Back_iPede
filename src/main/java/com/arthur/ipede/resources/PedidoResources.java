@@ -43,4 +43,10 @@ public class PedidoResources {
 		return ResponseEntity.ok().body(service.retornaPedido(id));
 	}
 	
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> deletaItemPedido(@PathVariable Integer id, @RequestParam(value="idItem") Integer idItem){
+		service.deletaItemPedido(id, idItem);
+		return ResponseEntity.noContent().build();
+	}
+	
 }

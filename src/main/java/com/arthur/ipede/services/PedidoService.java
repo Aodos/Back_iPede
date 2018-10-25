@@ -86,7 +86,13 @@ public class PedidoService {
 			String update = "select sum(pti.qtd_item * i.vlr_valor_item) from ipededata.ta_pedido_tem_item pti\r\n" + 
 					"INNER JOIN ipededata.tb_item i ON i.idt_id_item = pti.fk_idt_id_item\r\n" + 
 					"where fk_idt_id_pedido = " + id + ";";
-			float valorPedido = daoRest.abreConexao().createStatement().executeQuery(update).getFloat("sum(pti.qtd_item * i.vlr_valor_item)");
+			
+			result = daoRest.abreConexao().createStatement().executeQuery(update);
+			float valorPedido = 0;
+			if(result.next()) {
+				valorPedido = result.getFloat(1);	
+			}
+			
 			
 			//Atualiza o valor do pedido
 			update = "update ipededata.tb_pedido p set vlr_valor_total = ? where idt_id_pedido = " + id + ";";
@@ -94,6 +100,7 @@ public class PedidoService {
 			preparedStatement.setString(1, Float.toString(valorPedido));
 			preparedStatement.executeUpdate();
 			
+			result.close();
 			preparedStatement.close();
 			daoRest.close();
 		} catch (SQLException e) {
@@ -172,6 +179,44 @@ public class PedidoService {
 		}
 
 		return lista;
+	}
+
+	public void deletaItemPedido(Integer id, Integer idItem) {
+		String delete = "DELETE FROM ipededata.ta_pedido_tem_item\r\n" + 
+				"WHERE fk_idt_id_pedido = " + id + " and fk_idt_id_item = " + idItem + ";";
+		try {
+			preparedStatement = daoRest.abreConexao().prepareStatement(delete);
+			preparedStatement.execute();
+			
+			//pega o valor do pedido
+			String update = "select sum(pti.qtd_item * i.vlr_valor_item) from ipededata.ta_pedido_tem_item pti\r\n" + 
+					"INNER JOIN ipededata.tb_item i ON i.idt_id_item = pti.fk_idt_id_item\r\n" + 
+					"where fk_idt_id_pedido = " + id + ";";
+			
+			result = daoRest.abreConexao().createStatement().executeQuery(update);
+			float valorPedido = 0;
+			if(result.next()) {
+				valorPedido = result.getFloat(1);	
+			}
+			
+			
+			//Atualiza o valor do pedido
+			update = "update ipededata.tb_pedido p set vlr_valor_total = ? where idt_id_pedido = " + id + ";";
+			preparedStatement = daoRest.abreConexao().prepareStatement(update);
+			preparedStatement.setString(1, Float.toString(valorPedido));
+			preparedStatement.executeUpdate();
+			
+			
+			result.close();
+			preparedStatement.close();
+			daoRest.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+
 	}
 	
 
