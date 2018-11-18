@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.arthur.ipede.domain.TbCliente;
@@ -14,6 +16,9 @@ import com.arthur.ipede.services.exception.QueryVaziaException;
 
 @Service
 public class ClienteService {
+	
+	@Autowired
+	private BCryptPasswordEncoder pe;
 
 	private CriaConexao daoRest = new CriaConexao();
 	private ResultSet result = null;
@@ -69,7 +74,8 @@ public class ClienteService {
 				
 				
 				 TbCliente rest = new TbCliente(idCliente, primeiroNome, ultimoNome, cpfCliente, emailCliente, celular, senhaCliente, ddd, urlFotoPerfil);
-				lista.add(rest);
+				 
+				 lista.add(rest);
 					
 			}
 			result.close();
@@ -80,6 +86,45 @@ public class ClienteService {
 		
 		if(lista.isEmpty()) {
 			throw new QueryVaziaException("Retorno da consulta por id: " + id + " esta vazio. Classe do erro: "+ClienteService.class.getName());
+		}
+		
+		return lista;
+	}
+	
+	public List<TbCliente> buscaPorEmail(String email) {
+		List<TbCliente> lista = new ArrayList<TbCliente>();
+		try {
+			String busca = "select * from ipededata.tb_cliente where eml_email = \'"+ email + "\';";
+			result = daoRest.abreConexao().createStatement().executeQuery(busca);
+			
+			
+			while(result.next()) {
+				
+				 int idCliente = result.getInt("idt_id_cliente");
+				 String primeiroNome = result.getString("nme_primeiro_nome");
+				 String ultimoNome = result.getString("nme_ultimo_nome");
+				 String cpfCliente = result.getString("cpf_cliente");
+				 String emailCliente = result.getString("eml_email");
+				 String celular = result.getString("cel_celular");
+				 String senhaCliente = result.getString("pwd_senha");
+				 Integer ddd = result.getInt("ddd_ddd");
+				 String urlFotoPerfil = result.getString("url_foto_cliente");
+				
+				
+				 TbCliente rest = new TbCliente(idCliente, primeiroNome, ultimoNome, cpfCliente, emailCliente, celular, senhaCliente, ddd, urlFotoPerfil);
+				 
+				 
+				 lista.add(rest);
+					
+			}
+			result.close();
+			daoRest.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		if(lista.isEmpty()) {
+			throw new QueryVaziaException("Retorno da consulta por id: " + email + " esta vazio. Classe do erro: "+ClienteService.class.getName());
 		}
 		
 		return lista;
@@ -96,7 +141,7 @@ public class ClienteService {
 			preparedStatement.setString(3, obj.getCpf_cliente());
 			preparedStatement.setString(4, obj.getEml_email());
 			preparedStatement.setString(5, obj.getCel_celular());
-			preparedStatement.setString(6, obj.getPwd_senha());
+			preparedStatement.setString(6, pe.encode(obj.getPwd_senha()));
 			preparedStatement.setInt(7, obj.getDdd_ddd());
 			
 			

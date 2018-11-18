@@ -12,6 +12,8 @@ public class TbCliente implements Serializable {
 	private String cpf_cliente;
 	private String eml_email;
 	private String cel_celular;
+	
+	//@JsonIgnore
 	private String pwd_senha;
 	private Integer ddd_ddd;
 	private String url_foto_cliente;
