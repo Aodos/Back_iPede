@@ -3,6 +3,9 @@ package com.arthur.ipede.security;
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -26,6 +29,7 @@ public class JWTFiltroAtenticacao extends UsernamePasswordAuthenticationFilter{
 		this.authMan = authMan;
 		this.jwtUtil = jwtUtil;
 	}
+	
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest req,
@@ -54,4 +58,6 @@ public class JWTFiltroAtenticacao extends UsernamePasswordAuthenticationFilter{
 		res.addHeader("Authorization", "Bearer " + token);
 		res.addHeader("access-control-expose-headers", "Authorization");
 	}
+	
+	
 }
