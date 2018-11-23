@@ -22,11 +22,9 @@ public class PedidoResources {
 	private PedidoService service;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> criaPedido(@RequestParam(value="idCliente") Integer idCliente, @RequestParam(value="idRestaurante") Integer idRestaurante) {
+	public ResponseEntity<List> criaPedido(@RequestParam(value="idCliente") Integer idCliente, @RequestParam(value="idRestaurante") Integer idRestaurante) {
 		Integer idPedido = 	service.criaPedido(idCliente, idRestaurante);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
-				.path("/{id}").buildAndExpand(idPedido).toUri();
-		return ResponseEntity.created(uri).build();
+		return ResponseEntity.ok().body(service.retornaPedido(idPedido));
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
@@ -46,6 +44,13 @@ public class PedidoResources {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> deletaItemPedido(@PathVariable Integer id, @RequestParam(value="idItem") Integer idItem){
 		service.deletaItemPedido(id, idItem);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value = "/{id}/zerapedido", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> zeraPedido(@PathVariable Integer id){
+		System.out.println("TESTE");
+		service.zeraPedido(id);
 		return ResponseEntity.noContent().build();
 	}
 	

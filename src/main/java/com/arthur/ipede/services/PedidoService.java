@@ -41,11 +41,13 @@ public class PedidoService {
 	public Integer criaPedido(Integer idCliente, Integer idRestaurante) {
 		String criaPedido = "insert into ipededata.tb_pedido (dta_data_pedido, sts_situacao_pagamento, fk_idt_id_cliente, fk_idt_id_restaurante)\r\n"
 				+ "values (now(), \'Pendente\', ?, ?);";
-		if (verificaSeNaoHaPedidoEmAberto(idCliente)) {
-			throw new PedidoPendenteException(
-					"Para cliente informado há um pedido pendente, não é possível abrir um novo pedido");
-		} else {
+
 			try {
+				
+				if (verificaSeNaoHaPedidoEmAberto(idCliente)) {
+					deletaPedido(idCliente);
+				}
+				
 				preparedStatement = daoRest.abreConexao().prepareStatement(criaPedido,
 						PreparedStatement.RETURN_GENERATED_KEYS);
 				preparedStatement.setInt(1, idCliente);
@@ -64,9 +66,24 @@ public class PedidoService {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
+		
 
 		return null;
+	}
+	
+	public void deletaPedido(Integer idCliente) {
+		String query = "DELETE FROM ipededata.tb_pedido\r\n" + 
+				"WHERE fk_idt_id_cliente = " + idCliente + " and sts_situacao_pagamento = \'Pendente\';";
+		try {
+			preparedStatement = daoRest.abreConexao().prepareStatement(query);
+
+			preparedStatement.execute();
+
+			preparedStatement.close();
+			daoRest.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void adicionaItemAoPedido(Integer id, Integer idItem, Integer qnt) {
@@ -217,6 +234,24 @@ public class PedidoService {
 		
 		
 
+	}
+
+	public void zeraPedido(Integer id) {
+		
+		String criaPedido = "DELETE FROM ipededata.ta_pedido_tem_item\r\n" + 
+				"WHERE fk_idt_id_pedido = " + id +";";
+
+			try {
+				
+				preparedStatement = daoRest.abreConexao().prepareStatement(criaPedido);
+
+				preparedStatement.execute();
+
+				preparedStatement.close();
+				daoRest.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 	}
 	
 

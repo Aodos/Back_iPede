@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -33,6 +34,13 @@ public class ClienteResources {
 	public ResponseEntity<List> buscaPorId(@PathVariable Integer id) {
 		return ResponseEntity.ok().body(service.buscaPorId(id));
 	}
+	
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "/email", method = RequestMethod.GET)
+	public ResponseEntity<List> buscaPorEmail(@RequestParam(value="email") String email) {
+		return ResponseEntity.ok().body(service.buscaPorEmail(email));
+	}
+	
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> teste(@RequestBody TbCliente obj) {
