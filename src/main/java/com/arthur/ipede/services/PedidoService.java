@@ -169,7 +169,47 @@ public class PedidoService {
 		return lista;
 	}
 	
+	public List<TbPedido> retornaTodosOsPedido(Integer id) {
+
+		List<TbPedido> lista = new ArrayList<TbPedido>();
+
+		String todosOsPedidos = "select ipededata.tb_pedido.idt_id_pedido, ipededata.tb_cliente.idt_id_cliente, ipededata.tb_restaurante.idt_id_restaurante, ipededata.tb_cliente.nme_primeiro_nome, ipededata.tb_restaurante.nme_nome_restaurante, ipededata.tb_pedido.vlr_valor_total, ipededata.tb_pedido.dta_data_pedido from ipededata.tb_pedido INNER JOIN ipededata.tb_cliente on ipededata.tb_pedido.fk_idt_id_cliente = ipededata.tb_cliente.idt_id_cliente INNER JOIN ipededata.tb_restaurante on ipededata.tb_pedido.fk_idt_id_restaurante = ipededata.tb_restaurante.idt_id_restaurante where ipededata.tb_pedido.fk_idt_id_cliente = "+ id + " and ipededata.tb_pedido.sts_situacao_pagamento = 'Pago';";
+
+		try {
+			result = daoRest.abreConexao().createStatement().executeQuery(todosOsPedidos);
+			while(result.next()) {
+				
+				Integer idPedido = result.getInt("idt_id_pedido");
+				Integer idCliente = result.getInt("idt_id_cliente");
+				Integer idRestaurante = result.getInt("idt_id_restaurante");
+				String nomeCliente = result.getString("nme_primeiro_nome");
+				String nomeRestaurante = result.getString("nme_nome_restaurante");
+				String valorTotal = result.getString("vlr_valor_total");
+				Date dataPedido = result.getDate("dta_data_pedido");
+				List<TbPedidoTemItem> itensPedido = retornaItensPedido(idPedido);
+				TbPedido pedi = new TbPedido(idPedido, idCliente, idRestaurante, nomeCliente, nomeRestaurante,
+						valorTotal, dataPedido, itensPedido);
+				
+				lista.add(pedi);
+				
+			}
+			result.close();
+			daoRest.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		if (lista.isEmpty()) {
+			throw new QueryVaziaException("Retorno da consulta por id: " + id + " esta vazio. Classe do erro: "
+					+ PedidoService.class.getName());
+		}
+
+		return lista;
+	}
+	
 	public List<TbPedidoTemItem> retornaItensPedido(Integer id) {
+		CriaConexao daoResta = new CriaConexao();
+		ResultSet resulta = null;
 		List<TbPedidoTemItem> lista = new ArrayList<TbPedidoTemItem>();
 
 		String pedido = "select ipededata.tb_item.idt_id_item, ipededata.tb_pedido.idt_id_pedido, ipededata.tb_item.nme_nome_item,\r\n" + 
@@ -177,20 +217,24 @@ public class PedidoService {
 				"INNER JOIN ipededata.tb_item on ipededata.ta_pedido_tem_item.fk_idt_id_item = ipededata.tb_item.idt_id_item\r\n" + 
 				"INNER JOIN ipededata.tb_pedido on ipededata.ta_pedido_tem_item.fk_idt_id_pedido = ipededata.tb_pedido.idt_id_pedido\r\n" + 
 				"where ipededata.ta_pedido_tem_item.fk_idt_id_pedido = " + id + ";";
+		
 		try {
-			result = daoRest.abreConexao().createStatement().executeQuery(pedido);
-			while (result.next()) {
+			resulta = daoResta.abreConexao().createStatement().executeQuery(pedido);
+			while (resulta.next()) {
 
-				Integer idItem = result.getInt("idt_id_item");
-				Integer idPedido = result.getInt("idt_id_pedido");
-				String nomeItem = result.getString("nme_nome_item");
-				Integer qntItem = result.getInt("qtd_item");
-				float valorItem = result.getFloat("vlr_valor_item");
+				Integer idItem = resulta.getInt("idt_id_item");
+				Integer idPedido = resulta.getInt("idt_id_pedido");
+				String nomeItem = resulta.getString("nme_nome_item");
+				Integer qntItem = resulta.getInt("qtd_item");
+				float valorItem = resulta.getFloat("vlr_valor_item");
 
 				TbPedidoTemItem pedi = new TbPedidoTemItem(idItem, idPedido, nomeItem, qntItem, valorItem);
 				lista.add(pedi);
 
 			}
+			
+			resulta.close();
+			daoResta.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -252,6 +296,22 @@ public class PedidoService {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+	}
+
+	public void finalizaPagamento(Integer id) {
+		String realizaPgto = "update ipededata.tb_pedido p set sts_situacao_pagamento = 'Pago' where idt_id_pedido =" + id +";";
+
+			try {
+				
+				preparedStatement = daoRest.abreConexao().prepareStatement(realizaPgto);
+
+				preparedStatement.execute();
+
+				preparedStatement.close();
+				daoRest.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}		
 	}
 	
 

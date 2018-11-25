@@ -41,6 +41,12 @@ public class PedidoResources {
 		return ResponseEntity.ok().body(service.retornaPedido(id));
 	}
 	
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "/{id}/pedidos", method = RequestMethod.GET)
+	public ResponseEntity<List> retornaTodosOsPedido(@PathVariable Integer id){		
+		return ResponseEntity.ok().body(service.retornaTodosOsPedido(id));
+	}
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> deletaItemPedido(@PathVariable Integer id, @RequestParam(value="idItem") Integer idItem){
 		service.deletaItemPedido(id, idItem);
@@ -51,6 +57,12 @@ public class PedidoResources {
 	public ResponseEntity<Void> zeraPedido(@PathVariable Integer id){
 		System.out.println("TESTE");
 		service.zeraPedido(id);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value = "/{id}/pago", method = RequestMethod.PUT)
+	public ResponseEntity<Void> situacaoPaga(@PathVariable Integer id){
+		service.finalizaPagamento(id);
 		return ResponseEntity.noContent().build();
 	}
 	
