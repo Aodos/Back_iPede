@@ -14,7 +14,7 @@ public class CriaConexao {
 
 		try {
 			Class.forName(nomeDrive);
-			String serverName = "localhost"; // caminho do servidor do BD
+			String serverName = "35.198.7.253"; // caminho do servidor do BD
 
 			String mydatabase = "ipededata"; // nome do seu banco de dados
 
