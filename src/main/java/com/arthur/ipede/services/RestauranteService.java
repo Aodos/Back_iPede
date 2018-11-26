@@ -50,6 +50,50 @@ public class RestauranteService {
 		return lista;
 
 	}
+	
+	public List<TbRestaurante> todosOsRestaurantesPerto(String lat, String lng) {
+		List<TbRestaurante> lista = new ArrayList<TbRestaurante>();
+		String query = "SELECT *, (6371 *\r\n" + 
+				"        acos(\r\n" + 
+				"            cos(radians(" + lat + ")) *\r\n" + 
+				"            cos(radians(lat_latitude)) *\r\n" + 
+				"            cos(radians(" + lng + ") - radians(lgt_longitude)) +\r\n" + 
+				"            sin(radians(" + lat + ")) *\r\n" + 
+				"            sin(radians(lat_latitude))\r\n" + 
+				"        )) AS distance\r\n" + 
+				"FROM ipededata.tb_restaurante HAVING distance <= 2.5 order by distance;";
+		
+		try {
+			result = daoRest.abreConexao().createStatement().executeQuery(query);
+			while (result.next()) {
+				int idRestaurante = result.getInt("idt_id_restaurante");
+				String cep = result.getString("cep_restaurante");
+				String cidade = result.getString("end_cidade");
+				String cnpjRestaurante = result.getString("cpj_cnpj_restaurante");
+				String endereco = result.getString("end_endereco");
+				float latitude = result.getFloat("lat_latitude");
+				float longitude = result.getFloat("lgt_longitude");
+				String nomeRestaurante = result.getString("nme_nome_restaurante");
+				String senhaRestaurante = result.getString("pwd_senha_restaurante");
+				String urlFotoRestaurante = result.getString("url_foto_restaurante");
+				Double distance = result.getDouble("distance");
+				
+
+				TbRestaurante rest = new TbRestaurante(idRestaurante, cep, cidade, cnpjRestaurante, endereco, latitude,
+						longitude, nomeRestaurante, senhaRestaurante, urlFotoRestaurante, distance);
+
+				lista.add(rest);
+
+			}
+			result.close();
+			daoRest.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return lista;
+
+	}
 
 	public List<TbRestaurante> buscaPorId(Integer id) {
 		List<TbRestaurante> lista = new ArrayList<TbRestaurante>();

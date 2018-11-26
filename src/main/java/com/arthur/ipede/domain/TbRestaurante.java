@@ -32,6 +32,16 @@ public class TbRestaurante implements Serializable {
 	private String senhaRestaurante;
 	
 	private String url_foto_restaurante;
+	
+	private Double distance;
+
+	public Double getDistance() {
+		return distance;
+	}
+
+	public void setDistance(Double distance) {
+		this.distance = distance;
+	}
 
 	public TbRestaurante() {
 	}
@@ -122,6 +132,8 @@ public class TbRestaurante implements Serializable {
 		this.senhaRestaurante = senhaRestaurante;
 	}
 	
+	
+	
 	public TbRestaurante(int idRestaurante, String cep, String cidade, String cnpjRestaurante, String endereco,
 			float latitude, float longitude, String nomeRestaurante, String senhaRestaurante, String url_foto_restaurante) {
 		super();
@@ -135,6 +147,22 @@ public class TbRestaurante implements Serializable {
 		this.nomeRestaurante = nomeRestaurante;
 		this.senhaRestaurante = senhaRestaurante;
 		this.setUrl_foto_restaurante(url_foto_restaurante);
+	}
+	
+	public TbRestaurante(int idRestaurante, String cep, String cidade, String cnpjRestaurante, String endereco,
+			float latitude, float longitude, String nomeRestaurante, String senhaRestaurante, String url_foto_restaurante, Double distance) {
+		super();
+		this.idRestaurante = idRestaurante;
+		this.cep = cep;
+		this.cidade = cidade;
+		this.cnpjRestaurante = cnpjRestaurante;
+		this.endereco = endereco;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.nomeRestaurante = nomeRestaurante;
+		this.senhaRestaurante = senhaRestaurante;
+		this.setUrl_foto_restaurante(url_foto_restaurante);
+		this.distance = distance;
 	}
 
 	public String getUrl_foto_restaurante() {
