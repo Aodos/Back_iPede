@@ -14,15 +14,15 @@ public class CriaConexao {
 
 		try {
 			Class.forName(nomeDrive);
-			String serverName = "35.198.7.253"; // caminho do servidor do BD
+			String serverName = "ipededata.mysql.database.azure.com"; // caminho do servidor do BD
 
 			String mydatabase = "ipededata"; // nome do seu banco de dados
 
 			String url = "jdbc:mysql://" + serverName + "/" + mydatabase + "?useTimezone=true&serverTimezone=UTC";
 
-			String username = "root"; // nome de um usuário de seu BD
+			String username = "ipedeadmin@ipededata"; // nome de um usuário de seu BD
 
-			String password = "qwertt22"; // sua senha de acesso
+			String password = "qwerTT22"; // sua senha de acesso
 	
 			con = DriverManager.getConnection(url, username, password);
 
