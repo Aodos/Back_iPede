@@ -32,7 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	
 	private static final String[] PUBLIC_MATCHERS = {
-			"/login"
+			"/login",
+			"/restaurantes",
+			"/restaurantes/**",
+			"/itens-restaurante",
+			"/itens-restaurante/**"
 	};
 	
 	@Override

@@ -131,8 +131,8 @@ public class ClienteService {
 	}
 	
 	public TbCliente inserir(TbCliente obj ) {
-		String insert = "insert into ipededata.tb_cliente (nme_primeiro_nome, nme_ultimo_nome, cpf_cliente, eml_email, cel_celular, pwd_senha, ddd_ddd)\r\n" + 
-				"values (?, ?, ?, ?, ?, ?, ?);";
+		String insert = "insert into ipededata.tb_cliente (nme_primeiro_nome, nme_ultimo_nome, cpf_cliente, eml_email, cel_celular, pwd_senha, ddd_ddd, url_foto_cliente)\r\n" + 
+				"values (?, ?, ?, ?, ?, ?, ?, ?);";
 		
 		try {
 			preparedStatement = daoRest.abreConexao().prepareStatement(insert, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -143,6 +143,7 @@ public class ClienteService {
 			preparedStatement.setString(5, obj.getCel_celular());
 			preparedStatement.setString(6, pe.encode(obj.getPwd_senha()));
 			preparedStatement.setInt(7, obj.getDdd_ddd());
+			preparedStatement.setString(8, obj.getUrl_foto_cliente());
 			
 			
 			preparedStatement.execute();
